@@ -7,5 +7,5 @@ topk=100
 printf "d,m,topk,relmse,caterr\n" >errortable_d.csv
 
 for d in "${dlist[@]}"; do
-    python3 tabulate_performance.py $d $m $topk "errortable_d.csv"
+    python3 tabulate_performance_gnu.py $d $m $topk "errortable_d.csv"
 done

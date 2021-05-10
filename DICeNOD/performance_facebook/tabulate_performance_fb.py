@@ -7,12 +7,12 @@ from lasso import lasso
 from numpy.random import default_rng
 
 if len(sys.argv) != 5:
-    print("USAGE: python3 tabulate_performance <d> <m> <topk> <csvfile>")
+    print("USAGE: python3 tabulate_performance_fb.py <d> <m> <topk> <csvfile>")
     exit(1)
 
 rng = default_rng()
 
-graph = snap.LoadEdgeList(snap.TNGraph, "p2p-Gnutella08.txt", 0, 1)
+graph = snap.LoadEdgeList(snap.TUNGraph, "facebook_combined.txt", 0, 1)
 
 # print("Nodes and Edges: (",graph.GetNodes(), graph.GetEdges(),")")
 
