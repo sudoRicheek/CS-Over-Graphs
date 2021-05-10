@@ -24,10 +24,10 @@ C = 2  # >1
 d = (1/epsilon) * (np.log(np.e * (theta+1) * n)/np.log(mu * C))
 m = (1/epsilon) * C * d * k1
 
-# d = math.ceil(d)
-# m = math.ceil(m)
-d=100
-m=500
+d = math.ceil(d)
+m = math.ceil(m)
+# d=30
+# m=100
 print("d: ",d)
 print("m: ",m)
 
@@ -120,3 +120,11 @@ visual_style["vertex_label_dist"] = 0
 visual_style["vertex_label_angle"] = 0.5
 visual_style["vertex_label_size"] = 8
 igraph.plot(g, **visual_style)
+
+################################
+## Uncomment to store the plots#
+################################
+
+# visual_style["bbox"] = (3000,3000)
+# visual_style["vertex_label_size"] = 40
+# igraph.plot(g,target="gnutellaTop"+str(topk)+".png",**visual_style)

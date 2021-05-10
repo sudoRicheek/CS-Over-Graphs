@@ -47,7 +47,7 @@ for u in graph.Nodes():
         for j, v2 in enumerate(nbrs):
             if v1 != v2:
                 egoadj[i, j] = 1 if graph.IsEdge(
-                    v1, v2) else 0
+                    v1, v2) or graph.IsEdge(v2, v1) else 0
     adj2 = np.dot(egoadj, egoadj)
     score = 0
     for (x, y), value in np.ndenumerate(egoadj):
@@ -84,7 +84,8 @@ topk = int(sys.argv[3])
 
 idxTopK = np.argpartition(x.flatten(), -topk)[-topk:]  # Indices not sorted
 idxTopK = np.sort(idxTopK)
-realTopK = np.argpartition(scoreMat.flatten(), -topk)[-topk:]  # Indices not sorted
+realTopK = np.argpartition(
+    scoreMat.flatten(), -topk)[-topk:]  # Indices not sorted
 realTopK = np.sort(realTopK)
 
 CATERROR = topk - np.size(np.intersect1d(idxTopK, realTopK))
@@ -92,9 +93,8 @@ print("Categorization Error: ", CATERROR, " mismatches")
 
 
 # Row which we want to append to our error csv file
-OutputList=[d,m,topk,100*MSE,CATERROR]
+OutputList = [d, m, topk, 100*MSE, CATERROR]
 with open(sys.argv[4], 'a') as f_object:
     writer_object = writer(f_object)
     writer_object.writerow(OutputList)
     f_object.close()
-    

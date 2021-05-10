@@ -18,7 +18,7 @@ k1 = 2*k
 
 epsilon = 0.15  # \in (0,1/6)
 theta = 0.1  # \in [0,1)
-mu = 1.5  # >0
+mu = 0.95  # >0
 C = 2  # >1
 
 d = (1/epsilon) * (np.log(np.e * (theta+1) * n)/np.log(mu * C))
@@ -98,7 +98,7 @@ layout = g.layout("lgl")
 ##########################
 # PARAMETER FOR CHANGING K
 ##########################
-topk=4 
+topk=10
 visual_style = {}
 visual_style["vertex_size"] = [10*wt for wt in g.vs["loc_btwness"]]
 visual_style["edge_width"] = 0.1
@@ -116,3 +116,13 @@ visual_style["vertex_label"] = [node if node in idxTopK else None for node, val 
 visual_style["vertex_label_dist"] = 0
 visual_style["vertex_label_angle"] = 0.1
 igraph.plot(g, **visual_style)
+
+################################
+## Uncomment to store the plots#
+################################
+
+# visual_style["bbox"] = (4000,4000)
+# visual_style["vertex_size"] = [100*wt for wt in g.vs["loc_btwness"]]
+# visual_style["vertex_label_size"] = 50
+# igraph.plot(g,target="facebookTop"+str(topk)+".png",**visual_style)
+# igraph.plot(g,target="facebookTop"+str(topk)+".pdf",**visual_style)
