@@ -107,7 +107,10 @@ visual_style["bbox"] = (800,800)
 visual_style["edge_color"] = "DodgerBlue"
 
 idxTopK = np.argpartition(g.vs["loc_btwness"], -topk)[-topk:]  # Indices not sorted
-print("Top ",topk," information flow hotspots: ", idxTopK)
+print("Top ",topk," information flow hotspots(RECONSTRUCTED): ", np.sort(idxTopK))
+realTopK = np.argpartition(scoreMat.flatten(), -topk)[-topk:]  # Indices not sorted
+print("Top ",topk," information flow hotspots(TRUE): ", np.sort(realTopK))
+
 visual_style["vertex_label"] = [node if node in idxTopK else None for node, val in enumerate(g.vs["loc_btwness"])]
 
 visual_style["vertex_label_dist"] = 0

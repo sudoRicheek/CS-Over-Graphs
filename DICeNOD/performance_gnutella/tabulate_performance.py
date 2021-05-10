@@ -1,41 +1,33 @@
+import sys
 import snap
 import math
-import igraph
 import numpy as np
+from csv import writer
 from lasso import lasso
 from numpy.random import default_rng
+
+if len(sys.argv) != 5:
+    print("USAGE: python3 tabulate_performance <d> <m> <topk> <csvfile>")
+    exit(1)
 
 rng = default_rng()
 
 graph = snap.LoadEdgeList(snap.TNGraph, "p2p-Gnutella08.txt", 0, 1)
 
-print("Nodes and Edges: (",graph.GetNodes(), graph.GetEdges(),")")
+# print("Nodes and Edges: (",graph.GetNodes(), graph.GetEdges(),")")
 
 n = graph.GetNodes()
 
-k = 1  # Parameter
-k1 = 2*k
-
-epsilon = 0.15  # \in (0,1/6)
-theta = 0.1  # \in [0,1)
-mu = 1  # >0
-C = 2  # >1
-
-d = (1/epsilon) * (np.log(np.e * (theta+1) * n)/np.log(mu * C))
-m = (1/epsilon) * C * d * k1
-
-# d = math.ceil(d)
-# m = math.ceil(m)
-d=100
-m=500
-print("d: ",d)
-print("m: ",m)
+d = int(sys.argv[1])
+m = int(sys.argv[2])
+print("d: ", d)
+print("m: ", m)
 
 scoreMat = np.zeros((n, 1))
 A = np.zeros((m, n))
 
 ########################
-#MAKE MEASUREMENT MATRIX
+# MAKE MEASUREMENT MATRIX
 ########################
 for j in range(n):  # 0 ... n-1
     # Select d numbers without replacement from 0 ... m-1
@@ -44,7 +36,7 @@ for j in range(n):  # 0 ... n-1
 # Measurement matrix constructed
 
 ######################################################################
-#FIND THE LOCAL BETWEENESS VALUES(Global betweenness is not tractable)
+# FIND THE LOCAL BETWEENESS VALUES(Global betweenness is not tractable)
 ######################################################################
 for u in graph.Nodes():
     v = u.GetId()
@@ -72,51 +64,37 @@ y = np.zeros((m, 1))  # This is the matrix we get as measured in real life
 for i in range(m):
     y[i] = A[i, :].dot(scoreMat)
 
-print("True Local Betweenness Values: ")
-print(scoreMat)
-print()
 #####################
 # SOLVE LASSO PROBLEM
 #####################
 x = lasso(A, y)
 
-print("Reconstructed Local Betweenness Values: ")
-print(x)
-
 ###############################
-#CALCULATE RECONSTRUCTION ERROR
+# CALCULATE RECONSTRUCTION ERROR
 ###############################
 MSE = np.linalg.norm(scoreMat-x)
 print("Relative L2-Norm Error Percentage: ", 100*MSE, "%")
 # print(np.linalg.norm(scoreMat)) # This is ofc 1
 
-
-#################
-#PLOTTING UTILITY
-#################
-g = igraph.Graph([(e.GetSrcNId(), e.GetDstNId()) for e in graph.Edges()])
-g.vs["loc_btwness"] = x.flatten()
-layout = g.layout("kk")
-
 ##########################
 # PARAMETER FOR CHANGING K
 ##########################
-topk=10 ## Change this to get the topK information flow hotspots
-visual_style = {}
-visual_style["vertex_size"] = [50*wt for wt in g.vs["loc_btwness"]]
-visual_style["edge_width"] = 0.1
-visual_style["layout"] = layout
-visual_style["bbox"] = (800, 800)
-visual_style["edge_color"] = "DodgerBlue"
+topk = 200  # Change this to get the topK information flow hotspots
+topk = int(sys.argv[3])
 
-idxTopK = np.argpartition(g.vs["loc_btwness"], -topk)[-topk:]  # Indices not sorted
-print("Top ",topk," information flow hotspots(RECONSTRUCTED): ", np.sort(idxTopK))
+idxTopK = np.argpartition(x.flatten(), -topk)[-topk:]  # Indices not sorted
+idxTopK = np.sort(idxTopK)
 realTopK = np.argpartition(scoreMat.flatten(), -topk)[-topk:]  # Indices not sorted
-print("Top ",topk," information flow hotspots(TRUE): ", np.sort(realTopK))
+realTopK = np.sort(realTopK)
 
-visual_style["vertex_label"] = [node if node in idxTopK else None for node, val in enumerate(g.vs["loc_btwness"])]
+CATERROR = topk - np.size(np.intersect1d(idxTopK, realTopK))
+print("Categorization Error: ", CATERROR, " mismatches")
 
-visual_style["vertex_label_dist"] = 0
-visual_style["vertex_label_angle"] = 0.5
-visual_style["vertex_label_size"] = 8
-igraph.plot(g, **visual_style)
+
+# Row which we want to append to our error csv file
+OutputList=[d,m,topk,100*MSE,CATERROR]
+with open(sys.argv[4], 'a') as f_object:
+    writer_object = writer(f_object)
+    writer_object.writerow(OutputList)
+    f_object.close()
+    
