@@ -16,4 +16,4 @@ CONTENTS:
 2. dicenod_facebook.py, dicenod_gnutella: Run the DICeNOD algorithm on Facebook and GNUTELLA datasets respectively
 3. facebook_combined.txt: facebook dataset
 4. p2p-Gnutella08.txt: GNUTELLA dataset from August 8, 2002
-5. test.ipynb and test1.ipynb: Python notebooks for playing around with the code
+5. dicenod_fbnb.ipynb and dicenod_gnunb.ipynb: Python notebooks for playing around with the code
