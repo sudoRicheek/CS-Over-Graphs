@@ -17,13 +17,13 @@ In this project we try to explore the utility of Compressive Sensing to identify
 ## We also studied the change in reconstruction error with the increase in the number of measurements and other parameters.
 
 <p align="center">
-  <img src="/DICeNOD/performance_gnutella/plots/RelMSEvsM_gnu.jpg" width="420" />
-  <img src="/DICeNOD/performance_gnutella/plots/RelMSEvsD_gnu.jpg" width="420" /> 
+  <img src="/DICeNOD/performance_gnutella/plots/RelMSEvsM_gnu.jpg" width="350" />
+  <img src="/DICeNOD/performance_gnutella/plots/RelMSEvsD_gnu.jpg" width="350" /> 
 </p>
 
 <p align="center">
-  <img src="/DICeNOD/performance_gnutella/plots/CatERRvsM_gnu.jpg" width="420" />
-  <img src="/DICeNOD/performance_gnutella/plots/CatERRvsD_gnu.jpg" width="420" /> 
+  <img src="/DICeNOD/performance_gnutella/plots/CatERRvsM_gnu.jpg" width="350" />
+  <img src="/DICeNOD/performance_gnutella/plots/CatERRvsD_gnu.jpg" width="350" /> 
 </p>
 
 ## You can find rest of the plots/results/mathematical formulations/theoretical guarantees in the [Project Report](https://github.com/sudoRicheek/CS-Over-Graphs/blob/main/Project%20Report.pdf). You can check out the implementation in DICeNOD sub-directory.  
